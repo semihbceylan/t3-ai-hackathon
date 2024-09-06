@@ -3,8 +3,10 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import requests
 import json
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources={r"/chat": {"origins": "*"}})
 
 # Firebase ayarları
 cred = credentials.Certificate(r"C:\Users\furkanevzat\fineitune\fineitune-c6fea-firebase-adminsdk-klqyf-98d2bbe4c7.json")
@@ -30,7 +32,7 @@ def llm2_invoke(user_inputs):
     if isinstance(user_inputs, str):
         user_inputs = [user_inputs]
 
-    system_prompt = "Sen yardımcı bir asistansın ve sana verilen talimatlar doğrultusunda en iyi cevabı üretmeye çalışacaksın..."
+    system_prompt = "Sen yardımcı bir asistansın ve sana verilen talimatlar doğrultusunda en iyi cevabı üretmeye çalışacaksın. Türkçe cevap vereceksin. Kullanıcının sorduğu sorulara, kullanıcının eğitimi ve bilgilendirilmesi doğrultusunda cevap veren bir eğitim sohbet-botusun. Senin adın FINITUNE ve kullanıcıları bilgilendirmek için tasarlandın. Kullanıcıların sorularına Türkçe olarak doğru ve etkili yanıtlar vermek için tasarlandın."
 
     special_format_output = convert_to_special_format(system_prompt, user_inputs)
 
