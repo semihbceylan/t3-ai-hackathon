@@ -99,27 +99,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.green[700],
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              onPressed: () async {
-                User? user = await _signInSilently(); // Sessiz oturum açmayı dene
-                if (user != null) {
-                  print('Giriş başarılı: ${user.displayName}');
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                }
-              },
-              child: Text('Google ile Giriş Yap (Silent)'),
-            ),
-            SizedBox(height: 20),
             GoogleSignInButton(), // Manuel Google giriş butonu
           ],
         ),
