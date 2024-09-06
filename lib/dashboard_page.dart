@@ -1,6 +1,7 @@
 import 'package:fineitune/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart'; // Import the charting library
+import "chatbot.dart";
 
 class DashboardPage extends StatelessWidget {
   @override
@@ -28,52 +29,66 @@ class DashboardPage extends StatelessWidget {
       ),
     ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.green,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.green,
+            ),
+            child: Text(
+              'C',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
               ),
-              child: Text(
-                'C',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
             ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );},
-            ),
-            ListTile(
-              leading: Icon(Icons.dashboard),
-              title: Text('Dashboard'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DashboardPage()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Users'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.contacts),
-              title: Text('Contacts'),
-              onTap: () {},
-            ),
-          ],
-        ),
+          ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Home'),
+            subtitle: Text('Ana sayfaya dön'),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            onTap: () {              
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );},
+          ),
+          ListTile(
+            leading: Icon(Icons.dashboard),
+            title: Text('Dashboard'),
+            subtitle: Text('Genel bakış ekranına git'),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            onTap: () {
+              //Navigator.push(
+              //  context,
+              //  MaterialPageRoute(builder: (context) => DashboardPage()),
+              //);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.hotel),
+            title: Text('Chat'),
+            subtitle: Text('Genel bakış ekranına git'),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatbotScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.contacts),
+            title: Text('Contacts'),
+            subtitle: Text('İletişim bilgilerini düzenle'),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            onTap: () {},
+          ),
+        ],
       ),
+    ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
