@@ -1,47 +1,66 @@
-import 'package:fineitune/homepage.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ChatbotScreen extends StatefulWidget {
   @override
   _ChatbotScreenState createState() => _ChatbotScreenState();
 }
 
-class _ChatbotScreenState extends State<ChatbotScreen> {
+class _ChatbotScreenState extends State<ChatbotScreen> with TickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode(); // FocusNode tanımlıyoruz
+  final FocusNode _focusNode = FocusNode(); 
   final List<Map<String, String>> _messages = [];
-  String _typingMessage = ""; // Mesaj animasyonu sırasında gösterilecek geçici mesaj
+  String _typingMessage = ""; 
 
-  void _sendMessage() {
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+
+  // Mesaj göndermeden önce API'ye bağlanma ve yanıt alma fonksiyonu
+  Future<void> _sendMessage() async {
     if (_controller.text.isNotEmpty) {
       final userMessage = _controller.text;
       _controller.clear();
 
       _addUserMessage(userMessage);
 
-      // Bot cevabını animasyonlu bir şekilde ekleyelim
-      Future.delayed(Duration(milliseconds: 200), () {
-        _addBotMessage("Bu bir sabit yanıt, Chatbot işlevini daha sonra ekleyeceğiz.");
-      });
+      try {
+        final response = await http.post(
+          Uri.parse('http://127.0.0.1:5000/chat'), 
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'user_input': userMessage}),
+        );
 
-      // Mesaj gönderildikten sonra metin kutusunu tekrar odaklıyoruz
+        if (response.statusCode == 200) {
+          final jsonResponse = jsonDecode(response.body);
+          final botResponse = jsonResponse['response'];
+
+          _addBotMessage(botResponse);
+        } else {
+          _addBotMessage("Hata: API'den geçerli bir yanıt alınamadı.");
+        }
+      } catch (e) {
+        _addBotMessage("Hata: API'ye bağlanılamadı. Lütfen daha sonra tekrar deneyin.");
+      }
+
       FocusScope.of(context).requestFocus(_focusNode);
     }
   }
 
+  // Kullanıcı mesajını ekleme fonksiyonu
   void _addUserMessage(String message) {
     setState(() {
       _messages.add({"user": message});
     });
+    _listKey.currentState!.insertItem(_messages.length - 1);
   }
 
+  // Bot mesajını ekleme ve animasyonlu yazma efekti
   void _addBotMessage(String message) {
-    _typingMessage = ""; // Başlangıçta bot mesajı boş
+    _typingMessage = ""; 
     int currentIndex = 0;
 
-    // Her karakteri sırayla eklemek için Timer kullanıyoruz
     Timer.periodic(Duration(milliseconds: 20), (timer) {
       if (currentIndex < message.length) {
         setState(() {
@@ -49,12 +68,12 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
         });
         currentIndex++;
       } else {
-        // Mesaj tamamlandığında mesajlar listesine ekliyoruz
         setState(() {
           _messages.add({"bot": _typingMessage});
-          _typingMessage = ""; // Geçici mesajı sıfırlıyoruz
+          _typingMessage = ""; 
         });
-        timer.cancel(); // Zamanlayıcıyı durduruyoruz
+        _listKey.currentState!.insertItem(_messages.length - 1);
+        timer.cancel(); 
       }
     });
   }
@@ -109,31 +128,22 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               child: Column(
                 children: [
                   Expanded(
-                    child: ListView.builder(
+                    child: AnimatedList(
+                      key: _listKey,
                       padding: EdgeInsets.all(16.0),
-                      itemCount: _messages.length + (_typingMessage.isNotEmpty ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index == _messages.length) {
-                          // Typing Effect için geçici mesaj
-                          return Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-                              margin: EdgeInsets.symmetric(vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                _typingMessage,
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                          );
-                        } else {
-                          final message = _messages[index];
-                          final isUser = message.containsKey("user");
-                          return Align(
+                      initialItemCount: _messages.length,
+                      itemBuilder: (context, index, animation) {
+                        final message = _messages[index];
+                        final isUser = message.containsKey("user");
+                        return SlideTransition(
+                          position: Tween<Offset>(
+                            begin: isUser ? Offset(1, 0) : Offset(-1, 0),
+                            end: Offset(0, 0),
+                          ).animate(CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.fastOutSlowIn,
+                          )),
+                          child: Align(
                             alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
@@ -147,8 +157,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),
-                          );
-                        }
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -165,7 +175,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                         Expanded(
                           child: TextField(
                             controller: _controller,
-                            focusNode: _focusNode, // FocusNode'u TextField'a bağlıyoruz
+                            focusNode: _focusNode, 
                             textInputAction: TextInputAction.send,
                             onSubmitted: (value) {
                               _sendMessage();
