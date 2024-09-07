@@ -38,7 +38,7 @@ Firestore: Kullanıcı verilerinin ve konuşma geçmişlerinin depolanması.
 ##Uygulamayı çalıştırmak için öncelikle lib/kerem.py dosyasını çalıştırmanız, akabinde yeni bir termimal açıp "flutter run" komutunu terminale yazıp 2 "(web)" seçmeniz gerekmektedir. Uygulama açıldığında Google ile giriş yapmanız gerekeceğinden yetkilendirme sorunu yaşarsanız iletişime geçmekten çekinmeyin. 
 
 ##Programın bu versiyonunda Dil modeliyle geliştirdiğimiz birçok fonksiyonu Flutter Arayüzü'nde aktif edemedik. Bazı fonksiyonlarımızı içeren Flutter uygulamasında Chatbot ile konuşma aktif. Eğer diğer fonksiyonlarımızı görmek isterseniz "main.py" dosyasını komut satırında çalıştırabilirsiniz. 
-Chatbot ile konuşurken, soru hazırlamasını, sınav hazırlamasını veya program hazırlamasını ifade edebilecek bir şey söylediğinizde bunu dinamik bir şekilde anlayıp ajan gibi aksiyon alacak. Onun harici eğer daha önce rag istemine yüklemiş olduğunuz bir kitap hakkında
+Chatbot ile konuşurken, soru hazırlamasını, sınav hazırlamasını veya program hazırlamasını ifade edebilecek bir şey söylediğinizde bunu dinamik bir şekilde anlayıp ajan gibi aksiyon alacak. Onun harici eğer daha önce rag istemine yüklemiş olduğunuz bir kitap hakkında soru sorarsanız RAG sistemi devreye girip sorunuzu cevaplayacaktır.
 
 ## Uygulamayı Lokalde Çalıştırma
 Uygulamanın Lokalde Çalıştırılması
