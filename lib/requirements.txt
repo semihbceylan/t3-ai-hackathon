@@ -1,0 +1,13 @@
+langchain_community
+PyPDF
+docx2txt
+sentence-transformers
+langchain-openai
+PyPDF2
+docx
+cohere
+faiss-cpu
+pinecone
+langchain
+pandas
+openpyxl

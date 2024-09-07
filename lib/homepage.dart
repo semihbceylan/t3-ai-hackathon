@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart'; // Firebase Auth paketi
 import 'main.dart'; // LoginScreen'i ekleyin
 import 'dashboard_page.dart'; // DashboardPage widget'ını tanımladığınız dosya
 import "chatbot.dart";
+import "customDrawer.dart";
 
 class HomePage extends StatelessWidget {
   final User? user = FirebaseAuth.instance.currentUser; // Kullanıcı bilgilerini alıyoruz
@@ -15,7 +16,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       title: Text(
-        'Dashboard',
+        "Fa'aI Eğitim Destek Platformu",
         style: TextStyle(color: Colors.black),
       ),
       actions: [
@@ -81,69 +82,14 @@ class HomePage extends StatelessWidget {
         ),
       ],
     ),
-    drawer: Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
-            subtitle: Text('Ana sayfaya dön'),
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            onTap: () {},
-          ),
-          ListTile(
-            leading: Icon(Icons.dashboard),
-            title: Text('Dashboard'),
-            subtitle: Text('Genel bakış ekranına git'),
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DashboardPage()),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.hotel),
-            title: Text('Chat'),
-            subtitle: Text('Genel bakış ekranına git'),
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ChatbotScreen()),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.contacts),
-            title: Text('Contacts'),
-            subtitle: Text('İletişim bilgilerini düzenle'),
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            onTap: () {},
-          ),
-        ],
-      ),
-    ),
+    drawer: customDrawer(),
     body: Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Monthly Overview',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
           SizedBox(height: 16),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildStatButton('Total Sales', '1.000.000 \$', Icons.show_chart),
-              _buildStatButton('Total Profit', '128.000 \$', Icons.money),
-              _buildStatButton('Orders', '12346', Icons.shopping_cart),
-              _buildStatButton('Customers', '3231', Icons.people),
-            ],
           ),
           SizedBox(height: 16),
           Expanded(
@@ -231,74 +177,15 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatButton(String title, String value, IconData icon) {
-    return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        padding: EdgeInsets.zero,
-      ),
-      child: SizedBox(
-        height: 70,
-        width: 300,
-        child: Row(
-          children: [
-            SizedBox(
-              width: 50,
-              child: Icon(icon, color: Colors.green, size: 30),
-            ),
-            Expanded(
-              child: Center(
-                child: Text(
-                  title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 50,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  value,
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildGraphCard() {
-    return Card(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Sales Overview',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Expanded(
-              child: Center(
-                child: Text('Graph Placeholder'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+    List<Map<String, String>> conversations = [
+      {'title': '11_sinif_biyoloji_test.pdf', 'time': '2 Saat Önce'},
+      {'title': '08_09_24_ders_plani.pdf', 'time': '5 Saat Önce'},
+      {'title': '11_sinif_turkce_konu.pdf', 'time': '3 Gün Önce'},
+      {'title': '02_09_24_sohbet_kaydi.docx', 'time': '6 Gün Önce'},
+    ];
 
-  Widget _buildNewsCard() {
     return Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -308,19 +195,19 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Son Sohbetlerim',
+              'Dokümanlar',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
             ListView.builder(
               shrinkWrap: true,
-              itemCount: 5,
+              itemCount: conversations.length,
               itemBuilder: (context, index) {
                 return ListTile(
                   onTap: () {},
-                  leading: Icon(Icons.article, color: Colors.green),
-                  title: Text('Lorem ipsum dolor sit amet'),
-                  subtitle: Text('5 minutes ago'),
+                  leading: Icon(Icons.document_scanner, color: Colors.green),
+                  title: Text(conversations[index]['title']!),
+                  subtitle: Text(conversations[index]['time']!),
                 );
               },
             ),
@@ -330,3 +217,44 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+  Widget _buildNewsCard() {
+    List<Map<String, String>> conversations = [
+      {'title': '11.Sınıf Biyoloji Hücreler Konu Anlatımı', 'time': '2 Saat Önce'},
+      {'title': '11.Sınıf Biyoloji Hücreler Test Hazırlama', 'time': '6 Saat Önce'},
+      {'title': '11.Sınıf Coğrafya Soru-Cevap', 'time': '2 Gün Önce'},
+      {'title': 'Ders Planı Hazırlama Görevi', 'time': '2 Gün Önce'},
+      {'title': 'Türkçe Dil Bilgisi Yanlış Soru Çözümü', 'time': '3 Gün Önce'},
+    ];
+
+    return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Son Sohbetler',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: conversations.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  onTap: () {},
+                  leading: Icon(Icons.article, color: Colors.green),
+                  title: Text(conversations[index]['title']!),
+                  subtitle: Text(conversations[index]['time']!),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+

@@ -4,13 +4,22 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'homepage.dart'; // HomePage widget'ınızı tanımladığınız dosya
 import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: FirebaseOptions(
+  apiKey: "AIzaSyCrmiZMy330bQq11duHX4OqVAIXCVm2KDI",
+  authDomain: "fineitune-c6fea.firebaseapp.com",
+  projectId: "fineitune-c6fea",
+  storageBucket: "fineitune-c6fea.appspot.com",
+  messagingSenderId: "371763171287",
+  appId: "1:371763171287:web:ae90288902e45ed9e78592",
+  measurementId: "G-4GKZRX97DS"
+    ),
   );
-
   runApp(MyApp());
 }
 
@@ -59,28 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // Bu yöntem, zaten kimliği doğrulanmış kullanıcılar için sessiz oturum açmayı dener
-  Future<User?> _signInSilently() async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signInSilently();
-      if (googleUser != null) {
-        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-
-        final UserCredential userCredential = await _auth.signInWithCredential(credential);
-        setState(() {}); // Widget'ı yeniden çiz, böylece kullanıcı durumu güncellenir
-        return userCredential.user;
-      }
-      return null;
-    } catch (e) {
-      print('Sessiz oturum açma hatası: $e');
-      return null;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,13 +79,14 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Hoşgeldiniz',
+              "Fa'aI",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.green[900],
               ),
             ),
+              
             SizedBox(height: 20),
             GoogleSignInButton(), // Manuel Google giriş butonu
           ],
